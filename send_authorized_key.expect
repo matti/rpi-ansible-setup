@@ -1,0 +1,15 @@
+#!/usr/bin/expect -f
+
+spawn scp -o PubkeyAuthentication=no -r /Users/mpa/.ssh/id_rsa.pub root@pi:authorized_keys
+expect "password:"
+send "raspbian\r"
+expect "*\r"
+expect "\r"
+
+spawn ssh -o PubkeyAuthentication=no root@pi
+expect -exact "root@pi's password: "
+send -- "raspbian\r"
+send -- ""
+send -- "mkdir -p .ssh\r"
+send -- "mv authorized_keys .ssh\r"
+send -- "chmod -R u=rw,go= .ssh\r"

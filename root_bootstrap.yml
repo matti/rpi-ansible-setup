@@ -1,0 +1,22 @@
+---
+- name: Boostrap Pi
+  hosts: all
+  user: root
+
+  tasks:
+    - apt: update_cache=yes cache_valid_time=3600
+    #- apt: upgrade=yes  # wat no idea why fails to find apt
+    - apt: name=sudo
+
+    - user: name=pi
+    - user: name=pi groups=sudo append=yes
+
+    - name: set authorized_key
+      authorized_key: user=pi key="{{ lookup('file', '/Users/mpa/.ssh/id_rsa.pub') }}"
+
+    - name: Set sudo group to NOPASSWD in sudoers
+      action: lineinfile dest=/etc/sudoers regexp="^%sudo" line="%sudo  ALL=(ALL:ALL) NOPASSWD:ALL" state=present
+    
+    - name: Disallow password authentication
+      action: lineinfile dest=/etc/ssh/sshd_config regexp="^PasswordAuthentication" line="PasswordAuthentication no" state=present
+      notify: Restart ssh
