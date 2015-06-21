@@ -1,0 +1,27 @@
+---
+- name: vnc
+  hosts: all
+  user: pi
+  become: yes
+  become_method: sudo
+
+# http://fun.kyco.de/2013/09/20/raspberry-pi-chromium-kiosk-mode-for-geckoboard-vnc/
+  tasks:
+    - apt: name=lightdm state=present
+
+    - name: emulate raspi-config lightdm autologin
+      command: chdir=/root {{ item }}
+      with_items:
+        - update-rc.d lightdm enable 2
+        - sed /etc/lightdm/lightdm.conf -i -e "s/^#autologin-user=.*/autologin-user=pi/"
+
+    - name: install x11vnc stuff
+      apt: pkg={{item}} state=present
+      with_items:
+        - x11vnc
+        - unclutter
+        - chromium
+        - x11-xserver-utils
+        # - ttf-mscorefonts-installer # TODO: not found, was recommended
+
+    - copy: src=assets/etc/X11/Xsession.d/72x11vnc dest=/etc/X11/Xsession.d/72x11vnc mode=755

@@ -8,9 +8,14 @@
     ./install_ansible_deps.sh
 
 # start
-    ansible-playbook -i ansible_hosts root_bootstrap.yml
 
+    ansible-playbook -i ansible_hosts root_bootstrap.yml
+    ansible-playbook -i ansible_hosts goodstuff.yml
+    
+    ansible-playbook -i ansible_hosts goodstuff_rpi.yml
+    WIP: ansible-playbook -i ansible_hosts x11vnc_rpi.yml
 
 # TODO
 
+ - playbook deps?
  - https://github.com/hostmaster/ansible-digitalocean-bootstrap/blob/master/tasks/security.yml

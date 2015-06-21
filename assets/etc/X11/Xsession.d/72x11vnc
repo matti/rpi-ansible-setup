@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#x11vnc -display :0 -forever -http -o /home/pi/x11vnc.log -loop -usepw -vencrypt only -sslonly -ssl SAVE &
+x11vnc -display :0 -forever -o /home/pi/x11vnc.log -loop &
